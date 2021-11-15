@@ -1,0 +1,28 @@
+body{
+    background-image: url('../images/tubi.jpg');
+}
+table{
+    background-color: black;
+    opacity: .8;
+    margin-top:3vh;
+    height: 100vh;
+    table-layout: fixed;
+    position: relative;
+    overflow: hidden;
+}
+td, th { 
+    font-weight: bold;
+    color: white;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+}
+
+thead{
+    background-color: steelblue;
+    height: 5vh;
+}
+
+button{
+    color: white;
+}
