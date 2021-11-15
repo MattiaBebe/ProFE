@@ -2,6 +2,7 @@ import React from "react";
 import '../CssFile/login.css';
 import Navbar from './navbar';
 import TaskTable from "./taskTable";
+import PaginaFantine from "./paginaFantine";
 
 class Login extends React.Component{
     constructor(props){
@@ -35,7 +36,6 @@ class Login extends React.Component{
     }
 
     render(){
-        console.log(this.state.correctPassword);
         return(this.state.layout);
     }
 
@@ -79,31 +79,10 @@ class Login extends React.Component{
                 if(password == this.state.password){
                     this.setState({
                         logged: true,
-                        layout : <TaskTable />       
+                        layout : <PaginaFantine/>      
                     });
+                    console.log(this.state.layout);
                 }  
-                else{
-                    this.setState({
-                        logged: false,
-                        layout: 
-                                <>
-                                <Navbar />
-                                <div className="loginBody">
-                                    <div className="login-box">
-                                        <h1> Login </h1>
-                                        <div className="textbox">
-                                            <input type="text" placeholder="Username" className="input" value={this.userName} onChange={this.setUsername}/>
-                                        </div>
-                                        <div className="textbox">
-                                            <input type="password" placeholder="Password" value={this.password} className='inputUncorrect' onChange={this.setPassword}/>
-                                        </div>
-                                        <input className='btn' type="button" name="login" value="Accedi" onClick={this.checkPassword}/>
-                                    </div>
-                                </div>
-                                </>
-                });
-                    
-                }
             }
         })
     }
