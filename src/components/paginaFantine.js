@@ -1,15 +1,28 @@
 import React from "react";
 import Navbar from "./navbar";
-import '../CssFile/tabellaOrdini.css';
 import PulsantiSelezione from "./PulsantiSelezione";
 
 const SERVER = 'localhost:3001';
 
 class PaginaFantine extends React.Component{
+
     constructor(props){
         super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+
         this.state = {
             rows : [],
+            statoClicked: [
+                {
+                    name: 'data',
+                    clicked: false
+                },
+                {
+                    name: 'codice',
+                    clicked: false
+                }
+            ],
             header:
                 <>
                     <tr>
@@ -35,9 +48,45 @@ class PaginaFantine extends React.Component{
           }
     }
 
+
+
     componentDidMount(){
         this.fetchData()
     }
+
+    handleClick = (event) => {
+        let rows = this.state.rows;
+        switch(event.target.value){
+            case 'data':
+                this.state.statoClicked[0].clicked = true;
+                this.state.statoClicked[1].clicked = false;
+                rows.sort((a,b) => {
+                    let index = a.props.children.findIndex(x => x.key == 'scadenza');
+                    let x = new Date(a.props.children[index].props.children)
+                    let y = new Date(b.props.children[index].props.children)
+                    let result = x - y
+                    return result
+                });
+                break
+            case 'codice':
+                this.state.statoClicked[1].clicked = true;
+                this.state.statoClicked[0].clicked = false;
+                rows.sort((a,b) => {
+                    let index = a.props.children.findIndex(x => x.key == 'codiceMateriale');
+                    let x = a.props.children[index].props.children
+                    let y = b.props.children[index].props.children
+                    let result = x > y ? 1 : -1 
+                    return result
+                });
+                break
+            default:
+                break
+        }
+        this.setState({
+            rows: rows
+        });
+    }
+    
 
     fetchData(){
         var data_rows = []
@@ -51,7 +100,7 @@ class PaginaFantine extends React.Component{
             var row = [];
             
           row.push(
-              <button> APRI ORDINE </button>
+              <td key={'dettagliOrdine'}><button> APRI ORDINE </button></td>
            )
 
            const {pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
@@ -82,23 +131,26 @@ class PaginaFantine extends React.Component{
         return(
           <>
           <Navbar />
-          <div width="100%">
-            <div style={{float:'left', display: 'flex'}}>
-                <PulsantiSelezione />
-            </div>
-            <table className="table">
-                <thead width="100%">
-                  {this.state.header}
-                </thead>
-                <tbody>
-                  {this.state.rows}
-                </tbody>
-              </table>
+            <div>
+                <div>
+                    <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
+                </div>
+                <div className="tableDiv">
+                <table className="table">
+                    <thead width="100%">
+                    {this.state.header}
+                    </thead>
+                    <tbody>
+                    {this.state.rows}
+                    </tbody>
+                </table>
+                </div>
             </div>
           </>
         )
       }
 }
+
 
 export default PaginaFantine;
 
