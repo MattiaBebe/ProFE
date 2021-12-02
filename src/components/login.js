@@ -3,6 +3,7 @@ import '../CssFile/login.css';
 import Navbar from './navbar';
 import TaskTable from "./taskTable";
 import PaginaFantine from "./paginaFantine";
+import Test from "./paginaTest";
 
 class Login extends React.Component{
     constructor(props){
@@ -79,7 +80,8 @@ class Login extends React.Component{
                 if(password == this.state.password){
                     this.setState({
                         logged: true,
-                        layout : <PaginaFantine/>      
+                        layout: <PaginaFantine user={this.state.userName}/>
+                        // layout : <Test/>     
                     });
                     console.log(this.state.layout);
                 }  

@@ -4,11 +4,11 @@ import PulsantiSelezione from "./PulsantiSelezione";
 
 const SERVER = 'localhost:3001';
 
+//PAGINA FANTINE AS1
 class PaginaFantine extends React.Component{
 
     constructor(props){
         super(props);
-
         this.handleClick = this.handleClick.bind(this);
 
         this.state = {
@@ -44,7 +44,7 @@ class PaginaFantine extends React.Component{
                     </tr>
                 </>,
             expanded : false,
-            baseEndpoint : `http://${SERVER}/fantine`
+            baseEndpoint : `http://${SERVER}/fantine?user=${props.user}`
           }
     }
 
@@ -86,7 +86,6 @@ class PaginaFantine extends React.Component{
             rows: rows
         });
     }
-    
 
     fetchData(){
         var data_rows = []

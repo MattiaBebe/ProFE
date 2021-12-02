@@ -106,7 +106,6 @@ class TaskTable extends React.Component{
         data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
       })
       this.setState({rows: data_rows});
-      //console.log(this.state.rows);
       })
       .catch(error => console.log('error', error))
     }
@@ -120,7 +119,7 @@ class TaskTable extends React.Component{
           this.fetchData();
       }
     }
-  
+
     render() {
       return(
         <>
