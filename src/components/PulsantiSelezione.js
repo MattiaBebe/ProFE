@@ -1,5 +1,4 @@
 import React from "react";
-import '../CssFile/tabellaOrdini.css';
 
 const PulsantiSelezione = (props) => {
     
@@ -14,11 +13,11 @@ const PulsantiSelezione = (props) => {
 
     return(
         <>
-            <div className="selectionContainer">
+            <div>
                 <div>
                     TIPOLOGIA DI ORDINAMENTO 
                 </div>
-                <div className="radioButton">
+                <div>
                     <input id="data" key="data" value="data" type="radio" onClick={onclick}/> Data
                     <input id="codice" key={'codice'} value="codice" type="radio" onClick={onclick}/> Codice  
                 </div>

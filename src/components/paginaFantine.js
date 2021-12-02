@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./navbar";
 import PulsantiSelezione from "./PulsantiSelezione";
+import '../CssFile/tabellaOrdini.css';
 
 const SERVER = 'localhost:3001';
 
@@ -131,8 +132,24 @@ class PaginaFantine extends React.Component{
           <>
           <Navbar />
             <div>
-                <div>
-                    <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col">
+                            <div class="alert alert-success" role="alert">
+                                BENVEUTO {this.props.user}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container">
+                    <div className="row">
+                        <div className="col border border-primary rounded-pill">
+                            Colonna 1
+                        </div>
+                        <div className="col border border-primary rounded-pill">
+                            <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
+                        </div>
+                    </div>
                 </div>
                 <div className="tableDiv">
                 <table className="table">
