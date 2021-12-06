@@ -11,6 +11,7 @@ class PaginaFantine extends React.Component{
     constructor(props){
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.apriOrdine = this.apriOrdine.bind(this);
 
         this.state = {
             rows : [],
@@ -88,6 +89,12 @@ class PaginaFantine extends React.Component{
         });
     }
 
+    apriOrdine = (params) => {
+        const {stlbez} = params;
+        console.log(stlbez);
+    }
+    
+
     fetchData(){
         var data_rows = []
         fetch(this.state.baseEndpoint)
@@ -98,12 +105,13 @@ class PaginaFantine extends React.Component{
           var tasks = data
           tasks.forEach( (task) => {
             var row = [];
-            
-          row.push(
-              <td key={'dettagliOrdine'}><button> APRI ORDINE </button></td>
-           )
 
-           const {pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
+        const {pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
+        let ordineCliente = {kdauf};
+
+          row.push(
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine(stlbez)}> APRI ORDINE </button></td>
+           )
 
           row.push(<td key={'posizione'}>{kdpos}</td>);
           row.push(<td key={'codiceCliente'}>{kunnr}</td>);
@@ -119,6 +127,7 @@ class PaginaFantine extends React.Component{
           row.push(<td key={'corsaAsta'}>{atwrt}</td>);
           row.push(<td key={'corsaCilindro'}>{atwrt1}</td>);
           row.push(<td key={'grezzo'}>{bismt}</td>);
+          
     
           data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
         })

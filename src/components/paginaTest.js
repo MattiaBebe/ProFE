@@ -11,16 +11,23 @@ const ArrayState = () => {
         setPeople(newPeople);
     }
 
+    const cliccami = () => {
+        console.log("cliccato");
+    }
+
     return (
         <>
             {
                 people.map( el => {
                     const {id, name} = el;
                     return (
+                        <>
+                        <input type="button" onClick={() => cliccami()}>click me </input>
                         <div key={id} className="item shadow">
                             <h5> {name} </h5>
                             <button onClick={() => removeItem(id)} type="button" className="button delete-button"> X </button>
                         </div>
+                        </>
                     )
                 })
             }

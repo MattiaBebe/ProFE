@@ -78,11 +78,19 @@ class Login extends React.Component{
             }
             else{
                 if(password == this.state.password){
-                    this.setState({
-                        logged: true,
-                        layout: <PaginaFantine user={this.state.userName}/>
-                        // layout : <Test/>     
-                    });
+                    if(this.state.userName === 'andvol'){
+                        this.setState({
+                            logged: true,
+                            layout: <TaskTable/>
+                        });
+                    }
+                    else{
+                        this.setState({
+                            logged: true,
+                            layout: <PaginaFantine user={this.state.userName}/>
+                            // layout : <Test/>     
+                        });
+                    }
                     console.log(this.state.layout);
                 }  
             }
