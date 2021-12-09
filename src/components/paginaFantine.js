@@ -175,15 +175,18 @@ class PaginaFantine extends React.Component{
             });
             console.log(this.state.rows);
             this.state.rows.forEach(row => {
-                diameterString = row[6].children.value.split('ø');
+                console.log()
+                let percorso = row.props.children[6].props.children;
+                diameterString = percorso.split('ø');
                 diameterValue = diameterString[1].split(' ',1);
-                if(row[6] == e.target.value){
+                if(diameterValue == e.target.value){
                     diameterList.push(row);
                     this.setState({
                         selectedRows: diameterList
                     });
                 }
             });
+            console.log(this.state.selectedRows);
       }
 
       //funzione per il controllo della selezione diametri
@@ -202,7 +205,9 @@ class PaginaFantine extends React.Component{
         this.state.diametersList.forEach(diametro => {
             radioButtonList.push(
              <>
+             <ul>
                 <DiameterButton diametro={diametro} buttonClick={this.handleDiametro}/>
+            </ul>
              </>)
         })
         return radioButtonList;

@@ -5,11 +5,9 @@ import React from "react";
     return (
 
         <>
-        <ul>
             <li key={diametro}>
                 <input type="button" value={diametro} onClick={buttonClick}/>      
             </li>
-        </ul>
         </>
     )
 }
