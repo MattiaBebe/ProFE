@@ -91,7 +91,6 @@ class Login extends React.Component{
                             // layout : <Test/>     
                         });
                     }
-                    console.log(this.state.layout);
                 }  
             }
         })

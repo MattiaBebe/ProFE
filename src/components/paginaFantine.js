@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "./navbar";
 import PulsantiSelezione from "./PulsantiSelezione";
 import '../CssFile/tabellaOrdini.css';
+import DiameterButton from "./utility/diameterButton";
 
 const SERVER = 'localhost:3001';
 
@@ -12,9 +13,15 @@ class PaginaFantine extends React.Component{
         super(props);
         this.handleClick = this.handleClick.bind(this);
         this.apriOrdine = this.apriOrdine.bind(this);
+        this.handleDiametro = this.handleDiametro.bind(this);
+        this.selectionFunction = this.selectionFunction.bind(this);
+        this.generateRadioButtonList = this.generateRadioButtonList.bind(this);
 
         this.state = {
             rows : [],
+            selectedRows: [],
+            selectionController: false,
+            diametersList: [],
             statoClicked: [
                 {
                     name: 'data',
@@ -92,11 +99,14 @@ class PaginaFantine extends React.Component{
     apriOrdine = (params) => {
         const {stlbez} = params;
         console.log(stlbez);
+        console.log(this.state.diameters);
     }
     
 
     fetchData(){
-        var data_rows = []
+        var data_rows = [];
+        let diameters = [];
+        let diametersList = [];
         fetch(this.state.baseEndpoint)
         .then(response => {
           return response.json();
@@ -119,6 +129,21 @@ class PaginaFantine extends React.Component{
           row.push(<td key={'ordineCliente'}>{kdauf}</td>);
           row.push(<td key={'codiceMateriale'}>{matnr}</td>);
           row.push(<td key={'descrizioneMateriale'}>{maktx}</td>);
+          //funzione per l'aggiunta di un diametro
+          let diameterString = maktx.split('ø');
+          let diameter = diameterString[1].split(' ',1)
+          diameters.forEach(el => {
+                let controllo = true;
+                diametersList.forEach(diametri => {
+                    if(el == diametri){
+                        controllo = false;
+                    }
+                });
+                if(controllo == true){
+                    diametersList.push(el);
+                }
+          });
+          diameters.push(diameter[0]);
           row.push(<td key={'scadenza'}>{dgltp}</td>);
           row.push(<td key={'totale'}>{psmng}</td>);
           row.push(<td key={'residuo'}>{resi}</td>);
@@ -131,11 +156,58 @@ class PaginaFantine extends React.Component{
     
           data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
         })
-        this.setState({rows: data_rows});
+        diametersList.sort(function(a,b){return a-b});
+        this.setState({rows: data_rows, diametersList: diametersList});
+        console.log(diametersList);
         //console.log(this.state.rows);
         })
         .catch(error => console.log('error', error))
       }
+
+      //funzione per la selezione del diametro
+
+      handleDiametro = (e) => {
+          let diameterList = [];
+          let diameterString;
+          let diameterValue;
+            this.setState({
+                selectionController: true
+            });
+            console.log(this.state.rows);
+            this.state.rows.forEach(row => {
+                diameterString = row[6].children.value.split('ø');
+                diameterValue = diameterString[1].split(' ',1);
+                if(row[6] == e.target.value){
+                    diameterList.push(row);
+                    this.setState({
+                        selectedRows: diameterList
+                    });
+                }
+            });
+      }
+
+      //funzione per il controllo della selezione diametri
+
+      selectionFunction(){
+          if(this.state.selectionController == false){
+                return <> {this.state.rows} </>
+          }
+          else{
+                return <> {this.state.selectedRows} </>
+          }
+      }
+
+      generateRadioButtonList(){
+        let radioButtonList = [];
+        this.state.diametersList.forEach(diametro => {
+            radioButtonList.push(
+             <>
+                <DiameterButton diametro={diametro} buttonClick={this.handleDiametro}/>
+             </>)
+        })
+        return radioButtonList;
+      }
+
       render() {
         return(
           <>
@@ -153,7 +225,10 @@ class PaginaFantine extends React.Component{
                 <div className="container">
                     <div className="row">
                         <div className="col border border-primary rounded-pill">
-                            Colonna 1
+                            <div>
+                            SELEZIONE DIAMETRO
+                            </div>
+                            {this.generateRadioButtonList()}
                         </div>
                         <div className="col border border-primary rounded-pill">
                             <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
@@ -166,7 +241,7 @@ class PaginaFantine extends React.Component{
                     {this.state.header}
                     </thead>
                     <tbody>
-                    {this.state.rows}
+                        {this.selectionFunction()}
                     </tbody>
                 </table>
                 </div>
