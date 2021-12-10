@@ -23,6 +23,7 @@ class PaginaFantine extends React.Component{
             selectedRows: [],
             selectionController: false,
             selectionValue: 0,
+            preValue: 0,
             diametersList: [],
             statoClicked: [
                 {
@@ -99,9 +100,8 @@ class PaginaFantine extends React.Component{
     }
 
     apriOrdine = (params) => {
-        const {stlbez} = params;
-        console.log(stlbez);
-        console.log(this.state.diameters);
+        const {aufnr} = params;
+        console.log(aufnr);
     }
     
 
@@ -118,11 +118,11 @@ class PaginaFantine extends React.Component{
           tasks.forEach( (task) => {
             var row = [];
 
-        const {pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
+        const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
         let ordineCliente = {kdauf};
 
           row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine(stlbez)}> APRI ORDINE </button></td>
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr})}> {aufnr} </button></td>
            )
 
           row.push(<td key={'posizione'}>{kdpos}</td>);
@@ -169,17 +169,22 @@ class PaginaFantine extends React.Component{
       //funzione per la selezione del diametro
 
       handleDiametro = (e) => {
+          let {preValue} = this.state;
           let diameterList = [];
           let diameterString;
           let diameterValue;
+          if(preValue != 0){
+                preValue.className = "selezioneDiametro";
+          }
           if(this.state.selectionValue == e.target.value){
+             e.target.className = "selezioneDiametro";
              this.setState({
                  selectionController: false,
                  selectionValue: 0
              });
           }
           else{
-            e.className = "selezionato";
+            e.target.className = "selezionato";
             this.setState({
                 selectionController: true,
                 selectionValue: e.target.value
@@ -196,6 +201,9 @@ class PaginaFantine extends React.Component{
                         selectedRows: diameterList
                     });
                 }
+            });
+            this.setState({
+                preValue: e.target
             });
           }
             console.log(this.state.selectedRows);

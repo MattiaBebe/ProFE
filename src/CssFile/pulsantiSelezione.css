@@ -8,6 +8,10 @@
 
 .selezionato{
     background-color: greenyellow;
+    color: black;
+    padding: 7px;
+    margin-left: 5px;
+    text-align: center;
 }
 
 .selezioneDiametro:hover{
