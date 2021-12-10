@@ -16,6 +16,7 @@ class PaginaFantine extends React.Component{
         this.apriOrdine = this.apriOrdine.bind(this);
         this.handleDiametro = this.handleDiametro.bind(this);
         this.selectionFunction = this.selectionFunction.bind(this);
+        this.generateStandardPage = this.generateStandardPage.bind(this);
         this.generateRadioButtonList = this.generateRadioButtonList.bind(this);
 
         this.state = {
@@ -115,7 +116,7 @@ class PaginaFantine extends React.Component{
         })
         .then(data => {
           var tasks = data
-          tasks.forEach( (task) => {
+          tasks.forEach( task => {
             var row = [];
 
         const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
@@ -191,7 +192,6 @@ class PaginaFantine extends React.Component{
             });
             console.log(this.state.rows);
             this.state.rows.forEach(row => {
-                console.log()
                 let percorso = row.props.children[6].props.children;
                 diameterString = percorso.split('ø');
                 diameterValue = diameterString[1].split(' ',1);
@@ -231,49 +231,56 @@ class PaginaFantine extends React.Component{
             return radioButtonList;
             }
       
+    //pagina standard della visualizzazione ordine
+
+      generateStandardPage() {
+          return(
+            <>
+            <Navbar />
+              <div>
+                  <div className="container-fluid">
+                      <div className="row">
+                          <div className="col">
+                              <div class="alert alert-success" role="alert">
+                                  benvenuto {this.props.user}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="container">
+                      <div className="row">
+                          <div className="col border border-2 border-primary rounded-pill">
+                              <div className="titoloSelezioneDiametro">
+                              SELEZIONE DIAMETRO
+                              </div>
+                              <div className="divSelezioneDiametro">
+                              {this.generateRadioButtonList()}
+                              </div>
+                          </div>
+                          <div className="col border border-2 border-primary rounded-pill">
+                              <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="tableDiv">
+                  <table className="table">
+                      <thead width="100%">
+                      {this.state.header}
+                      </thead>
+                      <tbody>
+                          {this.selectionFunction()}
+                      </tbody>
+                  </table>
+                  </div>
+              </div>
+            </>
+          )
+      }
 
       render() {
-        return(
-          <>
-          <Navbar />
-            <div>
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col">
-                            <div class="alert alert-success" role="alert">
-                                benvenuto {this.props.user}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="container">
-                    <div className="row">
-                        <div className="col border border-2 border-primary rounded-pill">
-                            <div className="titoloSelezioneDiametro">
-                            SELEZIONE DIAMETRO
-                            </div>
-                            <div className="divSelezioneDiametro">
-                            {this.generateRadioButtonList()}
-                            </div>
-                        </div>
-                        <div className="col border border-2 border-primary rounded-pill">
-                            <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
-                        </div>
-                    </div>
-                </div>
-                <div className="tableDiv">
-                <table className="table">
-                    <thead width="100%">
-                    {this.state.header}
-                    </thead>
-                    <tbody>
-                        {this.selectionFunction()}
-                    </tbody>
-                </table>
-                </div>
-            </div>
-          </>
-        )
+            return(
+                  this.generateStandardPage()
+            )
       }
 }
 
