@@ -3,6 +3,7 @@ import Navbar from "./navbar";
 import PulsantiSelezione from "./PulsantiSelezione";
 import '../CssFile/tabellaOrdini.css';
 import DiameterButton from "./utility/diameterButton";
+import '../CssFile/pulsantiSelezione.css';
 
 const SERVER = 'localhost:3001';
 
@@ -21,6 +22,7 @@ class PaginaFantine extends React.Component{
             rows : [],
             selectedRows: [],
             selectionController: false,
+            selectionValue: 0,
             diametersList: [],
             statoClicked: [
                 {
@@ -170,8 +172,17 @@ class PaginaFantine extends React.Component{
           let diameterList = [];
           let diameterString;
           let diameterValue;
+          if(this.state.selectionValue == e.target.value){
+             this.setState({
+                 selectionController: false,
+                 selectionValue: 0
+             });
+          }
+          else{
+            e.className = "selezionato";
             this.setState({
-                selectionController: true
+                selectionController: true,
+                selectionValue: e.target.value
             });
             console.log(this.state.rows);
             this.state.rows.forEach(row => {
@@ -186,6 +197,7 @@ class PaginaFantine extends React.Component{
                     });
                 }
             });
+          }
             console.log(this.state.selectedRows);
       }
 
@@ -202,16 +214,15 @@ class PaginaFantine extends React.Component{
 
       generateRadioButtonList(){
         let radioButtonList = [];
-        this.state.diametersList.forEach(diametro => {
-            radioButtonList.push(
-             <>
-             <ul>
-                <DiameterButton diametro={diametro} buttonClick={this.handleDiametro}/>
-            </ul>
-             </>)
-        })
-        return radioButtonList;
-      }
+                this.state.diametersList.forEach(diametro => {
+                    radioButtonList.push(
+                     <>
+                        <DiameterButton diametro={diametro} buttonClick={this.handleDiametro}/>
+                     </>)
+                })
+            return radioButtonList;
+            }
+      
 
       render() {
         return(
@@ -222,20 +233,22 @@ class PaginaFantine extends React.Component{
                     <div className="row">
                         <div className="col">
                             <div class="alert alert-success" role="alert">
-                                BENVEUTO {this.props.user}
+                                benvenuto {this.props.user}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="container">
                     <div className="row">
-                        <div className="col border border-primary rounded-pill">
-                            <div>
+                        <div className="col border border-2 border-primary rounded-pill">
+                            <div className="titoloSelezioneDiametro">
                             SELEZIONE DIAMETRO
                             </div>
+                            <div className="divSelezioneDiametro">
                             {this.generateRadioButtonList()}
+                            </div>
                         </div>
-                        <div className="col border border-primary rounded-pill">
+                        <div className="col border border-2 border-primary rounded-pill">
                             <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
                         </div>
                     </div>

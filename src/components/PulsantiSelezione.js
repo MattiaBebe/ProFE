@@ -1,4 +1,5 @@
 import React from "react";
+import '../CssFile/pulsantiSelezione.css';
 
 const PulsantiSelezione = (props) => {
     
@@ -13,11 +14,11 @@ const PulsantiSelezione = (props) => {
 
     return(
         <>
-            <div>
-                <div>
+            <div className="tipologiaDiOrdinamento">
+                <div className="tipologiaDiOrdinamento">
                     TIPOLOGIA DI ORDINAMENTO 
                 </div>
-                <div>
+                <div className="tipologiaDiOrdinamento">
                     <input id="data" key="data" value="data" type="radio" onClick={onclick}/> Data
                     <input id="codice" key={'codice'} value="codice" type="radio" onClick={onclick}/> Codice  
                 </div>

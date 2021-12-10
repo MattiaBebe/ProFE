@@ -1,13 +1,12 @@
 import React from "react";
+import '../../CssFile/pulsantiSelezione.css';
 
  const DiameterButton = (params) => {
     const {diametro, buttonClick} = params;
     return (
 
         <>
-            <li key={diametro}>
-                <input type="button" value={diametro} onClick={buttonClick}/>      
-            </li>
+                <input type="button" value={diametro} onClick={buttonClick} className="selezioneDiametro"/>      
         </>
     )
 }

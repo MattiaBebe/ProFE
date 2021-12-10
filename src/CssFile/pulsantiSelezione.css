@@ -1,0 +1,42 @@
+.selezioneDiametro{
+    background-color: aqua;
+    color: black;
+    padding: 7px;
+    margin-left: 5px;
+    text-align: center;
+}
+
+.selezionato{
+    background-color: greenyellow;
+}
+
+.selezioneDiametro:hover{
+    background-color: chartreuse;
+    color: black;
+    font-size: bold;
+}
+
+.button:hover{
+    font-size: bold;
+}
+
+.titoloSelezioneDiametro{
+    text-align: center;
+    color: aqua;
+    font-size: bold;
+    font-size: 25px;
+}
+
+.divSelezioneDiametro{
+    align-content: center;
+    text-align: center;
+    padding: 5px;
+}
+
+.tipologiaDiOrdinamento{
+    font-size: 25px;
+    text-align: center;
+    align-content: center;
+    color: aqua;
+    padding-bottom: 5px;
+}

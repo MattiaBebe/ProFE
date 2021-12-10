@@ -35,21 +35,6 @@ thead{
     height: 5vh;
 }
 
-.selectionContainer{
-    color: rgb(12, 135, 206);
-    font-weight: bold;
-    font-family: fantasy;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -0%);
-    background-color: rgb(163, 163, 163);
-    border-radius: 100px;
-    text-align: center;
-    width: 40%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-top: 10px;
-}
 
 div .radioButton{
     color: black;
