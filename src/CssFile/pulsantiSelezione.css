@@ -44,3 +44,11 @@
     color: aqua;
     padding-bottom: 5px;
 }
+
+svg{
+    color: blue;
+}
+
+svg:hover{
+    color: red;
+}
