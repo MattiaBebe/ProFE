@@ -18,9 +18,13 @@ class PaginaFantine extends React.Component{
         this.selectionFunction = this.selectionFunction.bind(this);
         this.generateStandardPage = this.generateStandardPage.bind(this);
         this.generateRadioButtonList = this.generateRadioButtonList.bind(this);
+        this.generateOrderVisualization = this.generateOrderVisualization.bind(this);
+        this.returnPre = this.returnPre.bind(this);
 
         this.state = {
+            orderVisualization: false,
             rows : [],
+            order: 0,
             selectedRows: [],
             selectionController: false,
             selectionValue: 0,
@@ -102,7 +106,10 @@ class PaginaFantine extends React.Component{
 
     apriOrdine = (params) => {
         const {aufnr} = params;
-        console.log(aufnr);
+        this.setState({
+            orderVisualization: true,
+            order: aufnr
+        });
     }
     
 
@@ -161,8 +168,6 @@ class PaginaFantine extends React.Component{
         })
         diametersList.sort(function(a,b){return a-b});
         this.setState({rows: data_rows, diametersList: diametersList});
-        console.log(diametersList);
-        //console.log(this.state.rows);
         })
         .catch(error => console.log('error', error))
       }
@@ -190,7 +195,6 @@ class PaginaFantine extends React.Component{
                 selectionController: true,
                 selectionValue: e.target.value
             });
-            console.log(this.state.rows);
             this.state.rows.forEach(row => {
                 let percorso = row.props.children[6].props.children;
                 diameterString = percorso.split('ø');
@@ -206,7 +210,6 @@ class PaginaFantine extends React.Component{
                 preValue: e.target
             });
           }
-            console.log(this.state.selectedRows);
       }
 
       //funzione per il controllo della selezione diametri
@@ -277,10 +280,38 @@ class PaginaFantine extends React.Component{
           )
       }
 
-      render() {
+      returnPre(){
+          this.setState({
+              orderVisualization: false
+          });
+      }
+
+      //fuznione per il ritorno della visualizzazione dell'ordine 
+
+      generateOrderVisualization(){
             return(
-                  this.generateStandardPage()
+                <>
+                    <div>
+                        {this.state.order}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                         <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
+                        </svg>
+                    </div>
+                </>
             )
+      }
+
+      render() {
+          if(this.state.orderVisualization == false){
+             return(
+                this.generateStandardPage()
+            )
+          }
+          else{
+              return(
+                  this.generateOrderVisualization()
+              )
+            }
       }
 }
 
