@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./navbar";
+import '../CssFile/visualizzazioneOrdine.css';
 
 export const PaginaVisualizzazioneOrdine = (props) => {
 
