@@ -26,6 +26,8 @@ class PaginaFantine extends React.Component{
             orderVisualization: false,
             rows : [],
             order: 0,
+            cliente: '',
+            code: '',
             selectedRows: [],
             selectionController: false,
             selectionValue: 0,
@@ -106,11 +108,13 @@ class PaginaFantine extends React.Component{
     }
 
     apriOrdine = (params) => {
-        const {aufnr} = params;
-        console.log(aufnr)
+        const {aufnr, name1, maktx} = params;
+        console.log(name1, maktx)
         this.setState({
             orderVisualization: true,
-            order: aufnr
+            order: aufnr,
+            cliente: name1,
+            code: maktx
         });
     }
     
@@ -132,7 +136,7 @@ class PaginaFantine extends React.Component{
         let ordineCliente = {kdauf};
 
           row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr})}> {aufnr} </button></td>
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx})}> {aufnr} </button></td>
            )
 
           row.push(<td key={'posizione'}>{kdpos}</td>);
@@ -291,9 +295,9 @@ class PaginaFantine extends React.Component{
       //fuznione per il ritorno della visualizzazione dell'ordine 
 
       generateOrderVisualization(){
-        const {order} = this.state
+        const {order, code, cliente} = this.state
         return(
-                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order}/>
+                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code}/>
                 )
       }
 

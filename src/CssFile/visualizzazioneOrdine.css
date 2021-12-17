@@ -2,3 +2,20 @@ div{
     color: white;
     font-size: 25px;
 }
+
+td{
+    font-size: 15px;
+}
+
+table{
+    padding-bottom: 30px;
+    border-bottom: 30px;
+}
+
+.mailto{
+    color: rgb(248, 43, 43);
+}
+
+.mailto:hover{
+    color: greenyellow;
+}
