@@ -28,6 +28,9 @@ class PaginaFantine extends React.Component{
             order: 0,
             cliente: '',
             code: '',
+            residuo: 0,
+            corsaAsta: 0,
+            corsaCilindro: 0,
             selectedRows: [],
             selectionController: false,
             selectionValue: 0,
@@ -108,13 +111,16 @@ class PaginaFantine extends React.Component{
     }
 
     apriOrdine = (params) => {
-        const {aufnr, name1, maktx} = params;
-        console.log(name1, maktx)
+        const {aufnr, name1, maktx, atwrt, atwrt1, resi} = params;
+        console.log(atwrt, atwrt1, aufnr)
         this.setState({
             orderVisualization: true,
             order: aufnr,
             cliente: name1,
-            code: maktx
+            code: maktx,
+            corsaAsta: atwrt,
+            corsaCilindro: atwrt1,
+            resi: resi
         });
     }
     
@@ -134,9 +140,9 @@ class PaginaFantine extends React.Component{
 
         const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
         let ordineCliente = {kdauf};
-
+          console.log(atwrt1, atwrt)
           row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx})}> {aufnr} </button></td>
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi})}> {aufnr} </button></td>
            )
 
           row.push(<td key={'posizione'}>{kdpos}</td>);
@@ -295,9 +301,9 @@ class PaginaFantine extends React.Component{
       //fuznione per il ritorno della visualizzazione dell'ordine 
 
       generateOrderVisualization(){
-        const {order, code, cliente} = this.state
+        const {order, code, cliente, corsaAsta, corsaCilindro, resi} = this.state
         return(
-                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code}/>
+                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi}/>
                 )
       }
 

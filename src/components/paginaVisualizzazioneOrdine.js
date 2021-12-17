@@ -8,6 +8,7 @@ class PaginaVisualizzazioneOrdine extends React.Component{
     constructor(props){
         super(props);
         this.fetchData = this.fetchData.bind(this);
+        this.generaCorse = this.generaCorse.bind(this);
         this.state = {
             header: [
                 <>
@@ -59,23 +60,72 @@ class PaginaVisualizzazioneOrdine extends React.Component{
         .catch(error => console.log('error', error))
     }
 
+    generaCorse(){
+        if(this.props.corsaAsta != '                              '){
+            return(
+                <>
+                <div className="row">
+                        <div className="col-3 indice">
+                            Corsa Asta:    
+                        </div>
+                        <div className="col-6">
+                            {this.props.corsaAsta}  
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-3 indice">
+                            Corsa Cilindro:    
+                        </div>
+                        <div className="col-6">
+                            {this.props.CorsaCilindro}  
+                        </div>
+                    </div>
+                </>
+            )
+        }
+    }
+
     render(){
         return(
             <>
                 <Navbar />
-                <div className="row">
+                <div className="row paddingTop">
                     <div className="col-3">
 
                     </div>
                     <div className="col-7">
                         <div className="row">
-                            ordine numero: {this.props.ordine}
+                            <div className="col-3 indice">
+                                ordine numero:    
+                            </div>
+                            <div className="col-2">
+                                {this.props.ordine}   
+                            </div>
                         </div>
                         <div className="row">
-                            Cliente: {this.props.cliente}
+                            <div className="col-3 indice">
+                                Cliente:    
+                            </div>
+                            <div className="col-6">
+                                {this.props.cliente}  
+                            </div>
                         </div>
                         <div className="row">
-                            Codice: {this.props.code}
+                            <div className="col-3 indice">
+                                Codice:    
+                            </div>
+                            <div className="col-6">
+                                {this.props.code}  
+                            </div>
+                        </div>
+                        {this.generaCorse()}
+                        <div className="row">
+                            <div className="col-3 indice">
+                                Quantità:    
+                            </div>
+                            <div className="col-6">
+                                {this.props.qta}  
+                            </div>
                         </div>
                     </div>
                     <div className="col-2">
@@ -84,7 +134,7 @@ class PaginaVisualizzazioneOrdine extends React.Component{
                         </svg>
                     </div>
                 </div>
-                <div className="tableDiv">
+                <div className="tableDiv paddingBottom">
                   <table className="table">
                       <thead width="100%">
                           {this.state.header}
@@ -93,6 +143,7 @@ class PaginaVisualizzazioneOrdine extends React.Component{
                           {this.state.rows}
                       </tbody>
                   </table>
+                </div>
                   <div className="row">
                       <div className="col-5"></div>
                       <div className="col-7">
@@ -103,7 +154,6 @@ class PaginaVisualizzazioneOrdine extends React.Component{
                             </svg>
                           </a>
                       </div>
-                  </div>
                   </div>
             </>
         )
