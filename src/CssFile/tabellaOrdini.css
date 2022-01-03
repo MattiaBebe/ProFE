@@ -47,3 +47,13 @@ button{
     color: white;
     background-color: steelblue;
 }
+
+.scaduto{
+    background-color: red !important;
+}
+.daFareOggi{
+    background-color: greenyellow !important;
+}
+.daFare{
+    background-color: white m !important;
+}

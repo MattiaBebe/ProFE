@@ -6,9 +6,13 @@ import DiameterButton from "./utility/diameterButton";
 import '../CssFile/pulsantiSelezione.css';
 import PaginaVisualizzazioneOrdine from "./paginaVisualizzazioneOrdine";
 
-const SERVER = 'localhost:3001';
+const path = require('path')
 
-//PAGINA FANTINE AS1
+const SERVER = 'localhost:3001';
+const SERVER_DISEGNI = 'http://192.168.1.3';
+const FILEPATH_DISEGNI = '/SHARE/UT/PARTI/';
+const URL_DISEGNI = new URL(SERVER_DISEGNI+FILEPATH_DISEGNI)
+
 class PaginaFantine extends React.Component{
 
     constructor(props){
@@ -21,6 +25,8 @@ class PaginaFantine extends React.Component{
         this.generateRadioButtonList = this.generateRadioButtonList.bind(this);
         this.generateOrderVisualization = this.generateOrderVisualization.bind(this);
         this.returnPre = this.returnPre.bind(this);
+        this.settaggioData = this.settaggioData.bind(this);
+        this.controlloScadenza = this.controlloScadenza.bind(this);
 
         this.state = {
             orderVisualization: false,
@@ -28,6 +34,7 @@ class PaginaFantine extends React.Component{
             order: 0,
             cliente: '',
             code: '',
+            disegno: '',
             residuo: 0,
             corsaAsta: 0,
             corsaCilindro: 0,
@@ -111,8 +118,8 @@ class PaginaFantine extends React.Component{
     }
 
     apriOrdine = (params) => {
-        const {aufnr, name1, maktx, atwrt, atwrt1, resi} = params;
-        console.log(atwrt, atwrt1, aufnr)
+        const {aufnr, name1, maktx, atwrt, atwrt1, resi, bismt} = params;
+        console.log(bismt);
         this.setState({
             orderVisualization: true,
             order: aufnr,
@@ -120,7 +127,8 @@ class PaginaFantine extends React.Component{
             code: maktx,
             corsaAsta: atwrt,
             corsaCilindro: atwrt1,
-            resi: resi
+            resi: resi,
+            disegno: URL_DISEGNI+bismt.trim()+".pdf"
         });
     }
     
@@ -142,7 +150,7 @@ class PaginaFantine extends React.Component{
         let ordineCliente = {kdauf};
           console.log(atwrt1, atwrt)
           row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi})}> {aufnr} </button></td>
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi, bismt})}> {aufnr} </button></td>
            )
 
           row.push(<td key={'posizione'}>{kdpos}</td>);
@@ -166,7 +174,17 @@ class PaginaFantine extends React.Component{
                 }
           });
           diameters.push(diameter[0]);
-          row.push(<td key={'scadenza'}>{dgltp}</td>);
+          let scadenza = this.settaggioData(dgltp)
+          let controlloScadenza = this.controlloScadenza(dgltp)
+          if(controlloScadenza = "scaduto"){
+                row.push(<td key={'scadenza'} className={"scaduto"}>{scadenza}</td>);
+          }
+          else if(controlloScadenza = "oggi"){
+                row.push(<td key={'scadenza'} className={"daFareOggi"}>{scadenza}</td>);
+          }
+          else if(controlloScadenza = "prossimi"){
+                row.push(<td key={'scadenza'} className={"daFare"}>{scadenza}</td>);
+          } 
           row.push(<td key={'totale'}>{psmng}</td>);
           row.push(<td key={'residuo'}>{resi}</td>);
           row.push(<td key={'lanciato'}>{stato}</td>);
@@ -183,6 +201,31 @@ class PaginaFantine extends React.Component{
         })
         .catch(error => console.log('error', error))
       }
+
+      controlloScadenza(dgltp){
+        let dataOdierna = new Date();
+        let scadenza = new Date(dgltp);
+        console.log(dataOdierna)
+        console.log(scadenza);
+        if(scadenza.getDate() > dataOdierna.getDate()){
+            console.log("scaduto")
+            return "scaduto"
+        }
+        else if(scadenza.getDate() == dataOdierna.getDate()){
+            console.log("da fare oggi")
+            return "oggi"
+        }
+        else if(scadenza.getDate() < dataOdierna.getDate){
+            console.log("da fare nei prossimi giorni")
+            return "prossimi"
+        }
+      }
+
+      settaggioData(dgltp){
+        let scadenza = dgltp;
+        let dataCompleta = scadenza.split("T",1);
+        return dataCompleta
+    }
 
       //funzione per la selezione del diametro
 
@@ -303,7 +346,7 @@ class PaginaFantine extends React.Component{
       generateOrderVisualization(){
         const {order, code, cliente, corsaAsta, corsaCilindro, resi} = this.state
         return(
-                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi}/>
+                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi} disegno={this.state.disegno}/>
                 )
       }
 
