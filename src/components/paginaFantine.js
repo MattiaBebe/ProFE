@@ -12,7 +12,7 @@ const SERVER = 'localhost:3001';
 const SERVER_DISEGNI = 'http://192.168.1.3';
 const FILEPATH_DISEGNI = '/SHARE/UT/PARTI/';
 const URL_DISEGNI = new URL(SERVER_DISEGNI+FILEPATH_DISEGNI)
-
+let totalePz = 0;
 class PaginaFantine extends React.Component{
 
     constructor(props){
@@ -27,10 +27,14 @@ class PaginaFantine extends React.Component{
         this.returnPre = this.returnPre.bind(this);
         this.settaggioData = this.settaggioData.bind(this);
         this.controlloScadenza = this.controlloScadenza.bind(this);
+        this.contaPezzi = this.contaPezzi.bind(this);
 
         this.state = {
             orderVisualization: false,
             rows : [],
+            totalePezzi: 0,
+            diametroScelto: 0,
+            totalePezziCompleto: 0,
             order: 0,
             cliente: '',
             code: '',
@@ -131,7 +135,6 @@ class PaginaFantine extends React.Component{
             disegno: URL_DISEGNI+bismt.trim()+".pdf"
         });
     }
-    
 
     fetchData(){
         var data_rows = [];
@@ -187,6 +190,9 @@ class PaginaFantine extends React.Component{
           } 
           row.push(<td key={'totale'}>{psmng}</td>);
           row.push(<td key={'residuo'}>{resi}</td>);
+          console.log(resi)
+          totalePz = totalePz + resi;
+          console.log(totalePz)
           row.push(<td key={'lanciato'}>{stato}</td>);
           row.push(<td key={'finito'}>{stlbez}</td>);
           row.push(<td key={'corsaAsta'}>{atwrt}</td>);
@@ -197,7 +203,7 @@ class PaginaFantine extends React.Component{
           data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
         })
         diametersList.sort(function(a,b){return a-b});
-        this.setState({rows: data_rows, diametersList: diametersList});
+        this.setState({rows: data_rows, diametersList: diametersList, totalePezziCompleto: totalePz});
         })
         .catch(error => console.log('error', error))
       }
@@ -234,6 +240,7 @@ class PaginaFantine extends React.Component{
           let diameterList = [];
           let diameterString;
           let diameterValue;
+          let pezziRestanti = 0;
           if(preValue != 0){
                 preValue.className = "selezioneDiametro";
           }
@@ -252,9 +259,11 @@ class PaginaFantine extends React.Component{
             });
             this.state.rows.forEach(row => {
                 let percorso = row.props.children[6].props.children;
+                let pezzi = row.props.children[9].props.children;
                 diameterString = percorso.split('ø');
                 diameterValue = diameterString[1].split(' ',1);
                 if(diameterValue == e.target.value){
+                    pezziRestanti = pezziRestanti + pezzi;
                     diameterList.push(row);
                     this.setState({
                         selectedRows: diameterList
@@ -262,7 +271,8 @@ class PaginaFantine extends React.Component{
                 }
             });
             this.setState({
-                preValue: e.target
+                preValue: e.target,
+                totalePezzi: pezziRestanti
             });
           }
       }
@@ -289,6 +299,18 @@ class PaginaFantine extends React.Component{
             return radioButtonList;
             }
       
+
+    //fuznione per il controllo del ritorno del numero dei pezzi
+
+    contaPezzi(){
+        if(this.state.selectionController == false){
+            return <> il numero di pezzi restanti è: {this.state.totalePezziCompleto}</>
+        }
+        else{
+            return <> il numero di pezzi restanti per il diametro {this.state.selectionValue} è : {this.state.totalePezzi}</>
+        }
+    }
+
     //pagina standard della visualizzazione ordine
 
       generateStandardPage() {
@@ -319,6 +341,10 @@ class PaginaFantine extends React.Component{
                               <PulsantiSelezione onclick={this.handleClick} stato={this.state.statoClicked}/>
                           </div>
                       </div>
+                  </div>
+                  <br></br>
+                  <div>
+                      {this.contaPezzi()}
                   </div>
                   <div className="tableDiv">
                   <table className="table">
