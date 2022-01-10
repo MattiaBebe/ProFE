@@ -4,6 +4,7 @@ import Navbar from './navbar';
 import TaskTable from "./taskTable";
 import PaginaFantine from "./paginaFantine";
 import Test from "./paginaTest";
+import OperazioniVarie from "./operazioniVarie";
 
 class Login extends React.Component{
     constructor(props){
@@ -87,7 +88,8 @@ class Login extends React.Component{
                     else{
                         this.setState({
                             logged: true,
-                            layout: <PaginaFantine user={this.state.userName}/>
+                            layout: <OperazioniVarie />
+                            // <PaginaFantine user={this.state.userName}/>
                             // layout : <Test/>     
                         });
                     }

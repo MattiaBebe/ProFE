@@ -13,7 +13,7 @@ const SERVER_DISEGNI = 'http://192.168.1.3';
 const FILEPATH_DISEGNI = '/SHARE/UT/PARTI/';
 const URL_DISEGNI = new URL(SERVER_DISEGNI+FILEPATH_DISEGNI)
 let totalePz = 0;
-class PaginaFantine extends React.Component{
+class OperazioniVarie extends React.Component{
 
     constructor(props){
         super(props);
@@ -78,7 +78,7 @@ class PaginaFantine extends React.Component{
                     </tr>
                 </>,
             expanded : false,
-            baseEndpoint : `http://${SERVER}/fantine?user=${props.user}`
+            baseEndpoint : `http://${SERVER}/operazioniVarie`
           }
     }
 
@@ -318,15 +318,6 @@ class PaginaFantine extends React.Component{
             <>
             <Navbar />
               <div>
-                  <div className="container-fluid">
-                      <div className="row">
-                          <div className="col">
-                              <div class="alert alert-success" role="alert">
-                                  benvenuto {this.props.user}
-                              </div>
-                          </div>
-                      </div>
-                  </div>
                   <div className="alert alert-success" role="alert">
                       {this.contaPezzi()}
                   </div>
@@ -391,6 +382,6 @@ class PaginaFantine extends React.Component{
 }
 
 
-export default PaginaFantine;
+export default OperazioniVarie;
 
 
