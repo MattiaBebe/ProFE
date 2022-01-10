@@ -88,8 +88,7 @@ class Login extends React.Component{
                     else{
                         this.setState({
                             logged: true,
-                            layout: <OperazioniVarie />
-                            // <PaginaFantine user={this.state.userName}/>
+                            layout: <PaginaFantine user={this.state.userName}/>
                             // layout : <Test/>     
                         });
                     }

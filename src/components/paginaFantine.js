@@ -5,8 +5,7 @@ import '../CssFile/tabellaOrdini.css';
 import DiameterButton from "./utility/diameterButton";
 import '../CssFile/pulsantiSelezione.css';
 import PaginaVisualizzazioneOrdine from "./paginaVisualizzazioneOrdine";
-
-const path = require('path')
+import OperazioniVarie from "./operazioniVarie";
 
 const SERVER = 'localhost:3001';
 const SERVER_DISEGNI = 'http://192.168.1.3';
@@ -28,9 +27,11 @@ class PaginaFantine extends React.Component{
         this.settaggioData = this.settaggioData.bind(this);
         this.controlloScadenza = this.controlloScadenza.bind(this);
         this.contaPezzi = this.contaPezzi.bind(this);
+        this.generateOperazioniVarie = this.generateOperazioniVarie.bind(this);
 
         this.state = {
             orderVisualization: false,
+            operazioniVarie: false,
             rows : [],
             totalePezzi: 0,
             diametroScelto: 0,
@@ -151,7 +152,6 @@ class PaginaFantine extends React.Component{
 
         const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
         let ordineCliente = {kdauf};
-          console.log(atwrt1, atwrt)
           row.push(
               <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi, bismt})}> {aufnr} </button></td>
            )
@@ -190,9 +190,7 @@ class PaginaFantine extends React.Component{
           } 
           row.push(<td key={'totale'}>{psmng}</td>);
           row.push(<td key={'residuo'}>{resi}</td>);
-          console.log(resi)
           totalePz = totalePz + resi;
-          console.log(totalePz)
           row.push(<td key={'lanciato'}>{stato}</td>);
           row.push(<td key={'finito'}>{stlbez}</td>);
           row.push(<td key={'corsaAsta'}>{atwrt}</td>);
@@ -211,10 +209,7 @@ class PaginaFantine extends React.Component{
       controlloScadenza(dgltp){
         let dataOdierna = new Date();
         let scadenza = new Date(dgltp);
-        console.log(dataOdierna)
-        console.log(scadenza);
         if(scadenza.getDate() > dataOdierna.getDate()){
-            console.log("scaduto")
             return "scaduto"
         }
         else if(scadenza.getDate() == dataOdierna.getDate()){
@@ -316,7 +311,7 @@ class PaginaFantine extends React.Component{
       generateStandardPage() {
           return(
             <>
-            <Navbar />
+            <Navbar pagina="paginaFantine" aPaginaOperazioni={this.generateOperazioniVarie}/>
               <div>
                   <div className="container-fluid">
                       <div className="row">
@@ -367,7 +362,15 @@ class PaginaFantine extends React.Component{
           });
       }
 
-      //fuznione per il ritorno della visualizzazione dell'ordine 
+      //funzione per il passaggio alla visualizzazione della pagina operazioniVarie
+
+      generateOperazioniVarie(){
+        this.setState({
+            operazioniVarie: true
+        });
+      }
+
+      //fuznione per il ritorno della visualizzazione dell'ordine  
 
       generateOrderVisualization(){
         const {order, code, cliente, corsaAsta, corsaCilindro, resi} = this.state
@@ -377,9 +380,16 @@ class PaginaFantine extends React.Component{
       }
 
       render() {
-          if(this.state.orderVisualization == false){
+          if(this.state.orderVisualization == false && this.state.operazioniVarie == false){
              return(
                 this.generateStandardPage()
+            )
+          }
+          else if(this.state.operazioniVarie == true){
+            return(
+                <>
+                 <OperazioniVarie user={this.props.user}/>
+                </>
             )
           }
           else{

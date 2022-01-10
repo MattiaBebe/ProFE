@@ -5,6 +5,7 @@ import '../CssFile/tabellaOrdini.css';
 import DiameterButton from "./utility/diameterButton";
 import '../CssFile/pulsantiSelezione.css';
 import PaginaVisualizzazioneOrdine from "./paginaVisualizzazioneOrdine";
+import PaginaFantine from "./paginaFantine";
 
 const path = require('path')
 
@@ -28,9 +29,11 @@ class OperazioniVarie extends React.Component{
         this.settaggioData = this.settaggioData.bind(this);
         this.controlloScadenza = this.controlloScadenza.bind(this);
         this.contaPezzi = this.contaPezzi.bind(this);
+        this.funzioneRitorno = this.funzioneRitorno.bind(this);
 
         this.state = {
             orderVisualization: false,
+            paginaBase: false,
             rows : [],
             totalePezzi: 0,
             diametroScelto: 0,
@@ -316,7 +319,7 @@ class OperazioniVarie extends React.Component{
       generateStandardPage() {
           return(
             <>
-            <Navbar />
+            <Navbar pagina="paginaOperazioniVarie" aPaginaBase={this.funzioneRitorno}/>
               <div>
                   <div className="alert alert-success" role="alert">
                       {this.contaPezzi()}
@@ -358,6 +361,14 @@ class OperazioniVarie extends React.Component{
           });
       }
 
+      //funzione per il ritorno alla pagina base 
+
+      funzioneRitorno(){
+         this.setState({
+             paginaBase: true
+         });
+      }
+
       //fuznione per il ritorno della visualizzazione dell'ordine 
 
       generateOrderVisualization(){
@@ -368,7 +379,12 @@ class OperazioniVarie extends React.Component{
       }
 
       render() {
-          if(this.state.orderVisualization == false){
+            if(this.state.paginaBase == true){
+                return(
+                    <><PaginaFantine user={this.props.user}/></>
+                )
+            }
+          else if(this.state.orderVisualization == false && this.state.paginaBase == false){
              return(
                 this.generateStandardPage()
             )
