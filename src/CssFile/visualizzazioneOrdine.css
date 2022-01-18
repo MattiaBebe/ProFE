@@ -33,3 +33,11 @@ table{
 .paddingBottom{
     padding-bottom: 30px;
 }
+
+.controlloQuantita{
+    color:rgb(40, 106, 230);
+}
+
+.controlloQuantita:hover{
+    color: black;
+}

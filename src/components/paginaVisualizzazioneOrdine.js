@@ -9,7 +9,12 @@ class PaginaVisualizzazioneOrdine extends React.Component{
         super(props);
         this.fetchData = this.fetchData.bind(this);
         this.generaCorse = this.generaCorse.bind(this);
+        this.aggiungiQTA = this.aggiungiQTA.bind(this);
+        this.rimuoviQTA = this.rimuoviQTA.bind(this);
+        this.scaricodb = this.scaricodb.bind(this);
+
         this.state = {
+            count: this.props.qta,
             header: [
                 <>
                     <tr>
@@ -22,8 +27,9 @@ class PaginaVisualizzazioneOrdine extends React.Component{
                 </>
             ],
             rows: [],
-            baseEndpoint : `http://${SERVER}/vistaOrdine?ordine=${props.ordine}`
         };
+        this.baseEndpoint = `http://${SERVER}/vistaOrdine?ordine=${props.ordine}`
+        this.apiScarico = `http://${SERVER}/scaricoFantine?ordine=${props.ordine}&qta=${this.state.count}`
     }
 
     componentDidMount(){
@@ -33,7 +39,7 @@ class PaginaVisualizzazioneOrdine extends React.Component{
     fetchData(props){
         let data_rows = [];
         const {ordine} = props;
-        fetch(this.state.baseEndpoint)
+        fetch(this.baseEndpoint)
         .then(response => {
           return response.json();
         })
@@ -90,6 +96,31 @@ class PaginaVisualizzazioneOrdine extends React.Component{
         console.log(disegno)
     }
 
+    aggiungiQTA(){
+        let count = Math.min(this.state.count + 1, this.props.qta) 
+        this.setState({
+            count: count 
+        });
+        console.log("sono il cliente: |"+this.props.cliente+"|")
+    }
+
+    rimuoviQTA(){
+        let count = Math.max(this.state.count - 1, 0)
+        this.setState({ 
+            count: count 
+        });
+    }
+
+    scaricodb(data){
+        fetch(this.apiScarico)
+        .then(response => {
+            return response.json()
+            }).then(data => {
+                console.log(data);
+                this.props.visualizzaDettagli = false;
+                });
+    }
+
     render(){
         return(
             <>
@@ -144,6 +175,39 @@ class PaginaVisualizzazioneOrdine extends React.Component{
                         </svg>
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col-5">
+
+                    </div>
+                    <div className="col-2">
+                        <center>
+                            Scarico: {this.state.count}
+                        </center>
+                    </div>
+                    <div className="col-5">
+                    </div>
+                </div>
+                <div className="row">
+                    
+                    <div className="col-4">
+                    </div>
+                    <div className="col-2">
+                        <center>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" className="bi bi-plus-circle-fill controlloQuantita" viewBox="0 0 16 16" onClick={this.aggiungiQTA}>
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                        </svg>
+                        </center>
+                    </div>
+                    <div className="col-2">
+                        <center>
+                        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => this.rimuoviQTA()} width="70" height="70" fill="currentColor" className="bi bi-dash-circle-fill controlloQuantita" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                        </svg>
+                        </center>
+                    </div>
+                    <div className="col-6">
+                    </div>
+                </div>
                 <div className="tableDiv paddingBottom">
                   <table className="table">
                       <thead width="100%">
@@ -156,19 +220,45 @@ class PaginaVisualizzazioneOrdine extends React.Component{
                 </div>
                   <div className="row">
                       <div className="col-5"></div>
-                      <div className="col-7">
+                      <div className="col-1">
                           <a href="mailto:technical@cypag.com">
+                            <center>
                             <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-envelope-exclamation-fill" viewBox="0 0 16 16" className="mailto">
                             <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586l-1.239-.757ZM16 4.697v4.974A4.491 4.491 0 0 0 12.5 8a4.49 4.49 0 0 0-1.965.45l-.338-.207L16 4.697Z"/>
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1.5a.5.5 0 0 1-1 0V11a.5.5 0 0 1 1 0Zm0 3a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
                             </svg>
+                            </center>
                           </a>
+                      </div>
+                      <div className="col-1">
+                            <center>
+                            <ConfirmButton data={{test:1, qta:3}} handler={this.scaricodb}/>
+                            </center>
+                      </div>
+                      <div className="col-5">
+                          
                       </div>
                   </div>
             </>
         )
     }
+}
 
+const ConfirmButton = (props) => {
+    return (
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-cloud-arrow-down" viewBox="0 0 16 16" onClick={() => confirm(props.handler, props.data)}>
+            <path fill-rule="evenodd" d="M7.646 10.854a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 9.293V5.5a.5.5 0 0 0-1 0v3.793L6.354 8.146a.5.5 0 1 0-.708.708l2 2z"/>
+            <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+            </svg>       
+        </div>
+    )
+}
+
+function confirm(handler, data){
+    if(window.confirm('CONFERMA')){
+        handler(data)
+    }
 }
 
 export default PaginaVisualizzazioneOrdine;

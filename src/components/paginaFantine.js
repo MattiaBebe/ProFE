@@ -123,10 +123,11 @@ class PaginaFantine extends React.Component{
     }
 
     apriOrdine = (params) => {
-        const {aufnr, name1, maktx, atwrt, atwrt1, resi, bismt} = params;
+        const {aufnr, name1, maktx, atwrt, atwrt1, resi, bismt, VORNR} = params;
         console.log(bismt);
         this.setState({
             orderVisualization: true,
+            vornr: VORNR,
             order: aufnr,
             cliente: name1,
             code: maktx,
@@ -150,10 +151,10 @@ class PaginaFantine extends React.Component{
           tasks.forEach( task => {
             var row = [];
 
-        const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
+        const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew, VORNR} = task;
         let ordineCliente = {kdauf};
           row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi, bismt})}> {aufnr} </button></td>
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi, bismt, VORNR})}> {aufnr} </button></td>
            )
 
           row.push(<td key={'posizione'}>{kdpos}</td>);
@@ -375,7 +376,7 @@ class PaginaFantine extends React.Component{
       generateOrderVisualization(){
         const {order, code, cliente, corsaAsta, corsaCilindro, resi} = this.state
         return(
-                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi} disegno={this.state.disegno}/>
+                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi} disegno={this.state.disegno} vornr={this.state.vornr} visualizzaDettagli={this.state.orderVisualization}/>
                 )
       }
 
@@ -394,7 +395,7 @@ class PaginaFantine extends React.Component{
           }
           else{
               return(
-                  this.generateOrderVisualization(this.state.order)
+                  this.generateOrderVisualization()
               )
             }
       }
