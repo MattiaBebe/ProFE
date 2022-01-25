@@ -6,6 +6,7 @@ import DiameterButton from "./utility/diameterButton";
 import '../CssFile/pulsantiSelezione.css';
 import PaginaVisualizzazioneOrdine from "./paginaVisualizzazioneOrdine";
 import OperazioniVarie from "./operazioniVarie";
+import GraficiProduzione from "./GraficiProduzione";
 
 const SERVER = 'localhost:3001';
 const SERVER_DISEGNI = 'http://192.168.1.3';
@@ -28,6 +29,8 @@ class PaginaFantine extends React.Component{
         this.controlloScadenza = this.controlloScadenza.bind(this);
         this.contaPezzi = this.contaPezzi.bind(this);
         this.generateOperazioniVarie = this.generateOperazioniVarie.bind(this);
+        this.generateChartVisualization = this.generateChartVisualization.bind(this);
+        this.statoGrafici = this.statoGrafici.bind(this);
 
         this.state = {
             orderVisualization: false,
@@ -35,6 +38,7 @@ class PaginaFantine extends React.Component{
             rows : [],
             totalePezzi: 0,
             diametroScelto: 0,
+            visualizzazioneGrafico: false,
             totalePezziCompleto: 0,
             order: 0,
             cliente: '',
@@ -165,7 +169,14 @@ class PaginaFantine extends React.Component{
           row.push(<td key={'descrizioneMateriale'}>{maktx}</td>);
           //funzione per l'aggiunta di un diametro
           let diameterString = maktx.split('ø');
-          let diameter = diameterString[1].split(' ',1)
+          let diameter; 
+          try{
+            diameter = diameterString[1].split(' ',1)
+          }
+          catch(e){
+              console.log(e);
+              diameter = null;
+          }
           diameters.forEach(el => {
                 let controllo = true;
                 diametersList.forEach(diametri => {
@@ -177,7 +188,9 @@ class PaginaFantine extends React.Component{
                     diametersList.push(el);
                 }
           });
-          diameters.push(diameter[0]);
+          if(diameter != null){
+            diameters.push(diameter[0]);
+          }
           let scadenza = this.settaggioData(dgltp)
           let controlloScadenza = this.controlloScadenza(dgltp)
           if(controlloScadenza = "scaduto"){
@@ -256,9 +269,15 @@ class PaginaFantine extends React.Component{
             this.state.rows.forEach(row => {
                 let percorso = row.props.children[6].props.children;
                 let pezzi = row.props.children[9].props.children;
-                diameterString = percorso.split('ø');
-                diameterValue = diameterString[1].split(' ',1);
-                if(diameterValue == e.target.value){
+                try{
+                    diameterString = percorso.split('ø');
+                    diameterValue = diameterString[1].split(' ',1);
+                }
+                catch(e){
+                    console.log(e);
+                    diameterValue = null;
+                }
+                if(diameterValue == e.target.value && diameterValue != null){
                     pezziRestanti = pezziRestanti + pezzi;
                     diameterList.push(row);
                     this.setState({
@@ -312,17 +331,8 @@ class PaginaFantine extends React.Component{
       generateStandardPage() {
           return(
             <>
-            <Navbar pagina="paginaFantine" aPaginaOperazioni={this.generateOperazioniVarie}/>
-              <div>
-                  <div className="container-fluid">
-                      <div className="row">
-                          <div className="col">
-                              <div class="alert alert-success" role="alert">
-                                  benvenuto {this.props.user}
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+            <Navbar pagina="paginaFantine" aPaginaOperazioni={this.generateOperazioniVarie} grafici={this.statoGrafici}/>
+              <div className="container-fluid">
                   <div className="alert alert-success" role="alert">
                       {this.contaPezzi()}
                   </div>
@@ -357,6 +367,15 @@ class PaginaFantine extends React.Component{
           )
       }
 
+
+      //funzione per il settaggio dello stato dedito alla visualizzazione della pagina dei grafic
+
+      statoGrafici(){
+          this.setState({
+                visualizzazioneGrafico: true
+          });
+      }
+
       returnPre(){
           this.setState({
               orderVisualization: false
@@ -376,12 +395,20 @@ class PaginaFantine extends React.Component{
       generateOrderVisualization(){
         const {order, code, cliente, corsaAsta, corsaCilindro, resi} = this.state
         return(
-                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi} disegno={this.state.disegno} vornr={this.state.vornr} visualizzaDettagli={this.state.orderVisualization}/>
+                <PaginaVisualizzazioneOrdine funzioneRitorno={this.returnPre} ordine={order} cliente={cliente} code={code} corsaAsta={corsaAsta} corsaCilindro={corsaCilindro} qta={resi} disegno={this.state.disegno} vornr={this.state.vornr} visualizzaDettagli={this.state.orderVisualization} workcenter={'10000013'}/>
                 )
       }
 
+      generateChartVisualization(){
+            return(
+                <>
+                    <GraficiProduzione />
+                </>
+            )
+      }
+
       render() {
-          if(this.state.orderVisualization == false && this.state.operazioniVarie == false){
+          if(this.state.orderVisualization == false && this.state.operazioniVarie == false && this.state.visualizzazioneGrafico == false){
              return(
                 this.generateStandardPage()
             )
@@ -391,6 +418,11 @@ class PaginaFantine extends React.Component{
                 <>
                  <OperazioniVarie user={this.props.user}/>
                 </>
+            )
+          }
+          else if(this.state.visualizzazioneGrafico == true){
+            return(
+                this.generateChartVisualization()
             )
           }
           else{
