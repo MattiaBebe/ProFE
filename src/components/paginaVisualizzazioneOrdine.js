@@ -29,7 +29,7 @@ class PaginaVisualizzazioneOrdine extends React.Component{
             rows: [],
         };
         this.baseEndpoint = `http://${SERVER}/vistaOrdine?ordine=${props.ordine}`
-        this.apiScarico = `http://${SERVER}/scaricoFantine?ordine=${props.ordine}&qta=${this.state.count}`
+        this.apiScarico = `http://${SERVER}/scarico?ordine=${props.ordine}&qta=${this.state.count}&workcenter=${props.workcenter}`
     }
 
     componentDidMount(){
@@ -117,7 +117,7 @@ class PaginaVisualizzazioneOrdine extends React.Component{
             return response.json()
             }).then(data => {
                 console.log(data);
-                this.props.visualizzaDettagli = false;
+                this.props.funzioneRitorno()
                 });
     }
 

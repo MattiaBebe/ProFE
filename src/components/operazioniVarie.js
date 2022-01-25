@@ -6,6 +6,7 @@ import DiameterButton from "./utility/diameterButton";
 import '../CssFile/pulsantiSelezione.css';
 import PaginaVisualizzazioneOrdine from "./paginaVisualizzazioneOrdine";
 import PaginaFantine from "./paginaFantine";
+import '../CssFile/operazioniVarie.css';
 
 const path = require('path')
 
@@ -125,11 +126,10 @@ class OperazioniVarie extends React.Component{
     }
 
     apriOrdine = (params) => {
-        const {aufnr, name1, maktx, atwrt, atwrt1, resi, bismt} = params;
-        console.log(bismt);
+        const {AUFNR, name1, maktx, atwrt, atwrt1, resi, bismt} = params;
         this.setState({
             orderVisualization: true,
-            order: aufnr,
+            order: AUFNR,
             cliente: name1,
             code: maktx,
             corsaAsta: atwrt,
@@ -148,62 +148,66 @@ class OperazioniVarie extends React.Component{
           return response.json();
         })
         .then(data => {
-          var tasks = data
+          var tasks = data;
+          console.log('test');
           tasks.forEach( task => {
-            var row = [];
+            console.log('test');
+            if(task.diff != 0){
+                var row = [];
 
-        const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
-        let ordineCliente = {kdauf};
-          console.log(atwrt1, atwrt)
-          row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi, bismt})}> {aufnr} </button></td>
-           )
+                const {AUFNR, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew} = task;
+                let ordineCliente = {kdauf};
+                console.log(atwrt1, atwrt)
+                row.push(
+                    <td key={'dettagliOrdine'}> <button onClick={() => this.apriOrdine({AUFNR, name1, maktx, atwrt, atwrt1, resi, bismt})}> {AUFNR} </button> </td>
+                )
 
-          row.push(<td key={'posizione'}>{kdpos}</td>);
-          row.push(<td key={'codiceCliente'}>{kunnr}</td>);
-          row.push(<td key={'descrizioneCliente'}>{name1}</td>);
-          row.push(<td key={'ordineCliente'}>{kdauf}</td>);
-          row.push(<td key={'codiceMateriale'}>{matnr}</td>);
-          row.push(<td key={'descrizioneMateriale'}>{maktx}</td>);
-          //funzione per l'aggiunta di un diametro
-          let diameterString = maktx.split('ø');
-          let diameter = diameterString[1].split(' ',1)
-          diameters.forEach(el => {
-                let controllo = true;
-                diametersList.forEach(diametri => {
-                    if(el == diametri){
-                        controllo = false;
-                    }
+                row.push(<td key={'posizione'}>{kdpos}</td>);
+                row.push(<td key={'codiceCliente'}>{kunnr}</td>);
+                row.push(<td key={'descrizioneCliente'}>{name1}</td>);
+                row.push(<td key={'ordineCliente'}>{kdauf}</td>);
+                row.push(<td key={'codiceMateriale'}>{matnr}</td>);
+                row.push(<td key={'descrizioneMateriale'}>{maktx}</td>);
+                //funzione per l'aggiunta di un diametro
+                let diameterString = maktx.split('ø');
+                let diameter = diameterString[1].split(' ',1)
+                diameters.forEach(el => {
+                        let controllo = true;
+                        diametersList.forEach(diametri => {
+                            if(el == diametri){
+                                controllo = false;
+                            }
+                        });
+                        if(controllo == true){
+                            diametersList.push(el);
+                        }
                 });
-                if(controllo == true){
-                    diametersList.push(el);
+                diameters.push(diameter[0]);
+                let scadenza = this.settaggioData(dgltp)
+                let controlloScadenza = this.controlloScadenza(dgltp)
+                if(controlloScadenza = "scaduto"){
+                        row.push(<td key={'scadenza'} className={"scaduto"}>{scadenza}</td>);
                 }
-          });
-          diameters.push(diameter[0]);
-          let scadenza = this.settaggioData(dgltp)
-          let controlloScadenza = this.controlloScadenza(dgltp)
-          if(controlloScadenza = "scaduto"){
-                row.push(<td key={'scadenza'} className={"scaduto"}>{scadenza}</td>);
-          }
-          else if(controlloScadenza = "oggi"){
-                row.push(<td key={'scadenza'} className={"daFareOggi"}>{scadenza}</td>);
-          }
-          else if(controlloScadenza = "prossimi"){
-                row.push(<td key={'scadenza'} className={"daFare"}>{scadenza}</td>);
-          } 
-          row.push(<td key={'totale'}>{psmng}</td>);
-          row.push(<td key={'residuo'}>{resi}</td>);
-          console.log(resi)
-          totalePz = totalePz + resi;
-          console.log(totalePz)
-          row.push(<td key={'lanciato'}>{stato}</td>);
-          row.push(<td key={'finito'}>{stlbez}</td>);
-          row.push(<td key={'corsaAsta'}>{atwrt}</td>);
-          row.push(<td key={'corsaCilindro'}>{atwrt1}</td>);
-          row.push(<td key={'grezzo'}>{bismt}</td>);
-          
-    
-          data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
+                else if(controlloScadenza = "oggi"){
+                        row.push(<td key={'scadenza'} className={"daFareOggi"}>{scadenza}</td>);
+                }
+                else if(controlloScadenza = "prossimi"){
+                        row.push(<td key={'scadenza'} className={"daFare"}>{scadenza}</td>);
+                } 
+                row.push(<td key={'totale'}>{psmng}</td>);
+                row.push(<td key={'residuo'}>{resi}</td>);
+                console.log(resi)
+                totalePz = totalePz + psmng;
+                console.log(totalePz)
+                row.push(<td key={'lanciato'}>{stato}</td>);
+                row.push(<td key={'finito'}>{stlbez}</td>);
+                row.push(<td key={'corsaAsta'}>{atwrt}</td>);
+                row.push(<td key={'corsaCilindro'}>{atwrt1}</td>);
+                row.push(<td key={'grezzo'}>{bismt}</td>);
+                
+            
+                data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
+            }
         })
         diametersList.sort(function(a,b){return a-b});
         this.setState({rows: data_rows, diametersList: diametersList, totalePezziCompleto: totalePz});
@@ -262,7 +266,7 @@ class OperazioniVarie extends React.Component{
             });
             this.state.rows.forEach(row => {
                 let percorso = row.props.children[6].props.children;
-                let pezzi = row.props.children[9].props.children;
+                let pezzi = row.props.children[8].props.children;
                 diameterString = percorso.split('ø');
                 diameterValue = diameterString[1].split(' ',1);
                 if(diameterValue == e.target.value){
