@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "./navbar";
 import PulsantiSelezione from "./PulsantiSelezione";
-import '../CssFile/tabellaOrdini.css';
 import DiameterButton from "./utility/diameterButton";
 import '../CssFile/pulsantiSelezione.css';
 import PaginaVisualizzazioneOrdine from "./paginaVisualizzazioneOrdine";
 import OperazioniVarie from "./operazioniVarie";
 import GraficiProduzione from "./GraficiProduzione";
+import '../CssFile/tabellaOrdini.css';
 
 const SERVER = 'localhost:3001';
 const SERVER_DISEGNI = 'http://192.168.1.3';
