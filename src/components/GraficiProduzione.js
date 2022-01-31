@@ -17,10 +17,12 @@ class GraficiProduzione extends React.Component{
         super(props)
         this.gestioneDati = this.gestioneDati.bind(this);
         this.passaData = this.passaData.bind(this);
+        this.gestioneDatiOrdinati = this.gestioneDatiOrdinati.bind(this);
         this.apriCalendario = this.apriCalendario.bind(this);
         this.chiudiCalendario = this.chiudiCalendario.bind(this);
         this.state = {
             todayDate: new Date(),
+            arrayDatiOrdinati: [],
             arrayDati: [],
             labels: [],
             datasets: [
@@ -45,6 +47,7 @@ class GraficiProduzione extends React.Component{
         console.log(this.state.todayDate);
         console.log(this.endpoint);
         this.fetchData()
+        this.gestioneDati();
     }
 
 
@@ -137,6 +140,7 @@ class GraficiProduzione extends React.Component{
         })
         .then(data => {
           var tasks = data
+          this.setState({ arrayDati: [] });
           dati = data;
           let valori = {}
           tasks.forEach( task => {
@@ -157,11 +161,13 @@ class GraficiProduzione extends React.Component{
       //funzione per la gestione dei dati per la creazione dei grafici
 
       gestioneDati(){
+        this.setState({ labels: []})
         let arrayCate = [];
         this.state.arrayDati.forEach(element => {
             let controlloCategoria = false;
             arrayCate.forEach(categoria => {
                 if(categoria == element.cate){
+
                     controlloCategoria = true;
                 }
             });
@@ -174,8 +180,39 @@ class GraficiProduzione extends React.Component{
         this.setState({
             labels: arrayCate
         });
+        this.gestioneDatiOrdinati()
         console.log(this.state.labels);
     }
+
+    gestioneDatiOrdinati(){
+        let datiOrdinati = [];
+        this.state.labels.forEach( categoria => {
+            let totalePezziCategoria = 0;
+            this.state.arrayDati.forEach( dato => {
+                if(dato.cate == categoria){
+                    totalePezziCategoria = totalePezziCategoria + dato.qta;
+                }
+                else{
+                    console.log('diversi');
+                }
+            })
+        datiOrdinati.push(totalePezziCategoria);
+        })
+        this.setState({
+            arrayDatiOrdinati: datiOrdinati,
+            datasets: [
+                {
+                label: 'Quantità di pezzi prodotti per tipologia',
+                backgroundColor: 'rgba(236, 171, 39, 1)',
+                borderColor: 'rgba(0,0,0,1)',
+                Color: 'red',
+                borderWidth: 2,
+                data: datiOrdinati
+                }
+            ]
+        });
+    }
+
 }
 
 
