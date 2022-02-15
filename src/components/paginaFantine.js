@@ -389,7 +389,7 @@ class PaginaFantine extends React.Component{
             operazioniVarie: true
         });
       }
-
+      
       //fuznione per il ritorno della visualizzazione dell'ordine  
 
       generateOrderVisualization(){
