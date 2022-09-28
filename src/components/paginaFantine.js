@@ -83,7 +83,7 @@ class PaginaFantine extends React.Component{
                     </tr>
                 </>,
             expanded : false,
-            baseEndpoint : `http://${SERVER}/fantine?user=${props.user}`
+            baseEndpoint : `http://${SERVER}/grafici`
           }
     }
 
@@ -143,32 +143,42 @@ class PaginaFantine extends React.Component{
     }
 
     fetchData(){
-        var data_rows = [];
+        let data_rows = [];
         let diameters = [];
         let diametersList = [];
+        let listaCaratteristiche = [];
+        let listaOperazioni = [];
         fetch(this.state.baseEndpoint)
         .then(response => {
           return response.json();
         })
         .then(data => {
-          var tasks = data
-          tasks.forEach( task => {
-            var row = [];
+          let tasks = data.result
+        tasks.forEach(task => {
+            const {ATWRT,ATWRT1,AUFNR,AUFPL,BISMT,DGLTP,FEVOR,KDAUF,KDMAT,KDPOS,KLABC,KUNNR,LINEA,MAKTX,MATNR,NAME1,NTGEW,PSMNG,PWERK,SPEDI,STATO,STBLEZ,WEMNG,ARBID,KTSCH,LMNGA,LTXA1,MGVRG, VORNR} = task;
 
-        const {aufnr, pwer, kdauf, stlbez, kdpos, kunnr, name1, matnr,maktx, dgltp, psmng, wemng, resi, stato, bismt, atwrt1, atwrt, spedi, kdmat, ntgew, VORNR} = task;
-        let ordineCliente = {kdauf};
+          //  funzione per la creazione della tabella 
+
+          let row = [];
           row.push(
-              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({aufnr, name1, maktx, atwrt, atwrt1, resi, bismt, VORNR})}> {aufnr} </button></td>
+              <td key={'dettagliOrdine'}><button onClick={() => this.apriOrdine({AUFNR, NAME1, MAKTX, ATWRT, ATWRT1, BISMT, VORNR})}> {AUFNR} </button></td>
            )
 
-          row.push(<td key={'posizione'}>{kdpos}</td>);
-          row.push(<td key={'codiceCliente'}>{kunnr}</td>);
-          row.push(<td key={'descrizioneCliente'}>{name1}</td>);
-          row.push(<td key={'ordineCliente'}>{kdauf}</td>);
-          row.push(<td key={'codiceMateriale'}>{matnr}</td>);
-          row.push(<td key={'descrizioneMateriale'}>{maktx}</td>);
+          row.push(<td key={'posizione'}>{KDPOS}</td>);
+          row.push(<td key={'codiceCliente'}>{KUNNR}</td>);
+          row.push(<td key={'descrizioneCliente'}>{NAME1}</td>);
+          row.push(<td key={'ordineCliente'}>{KDAUF}</td>);
+          row.push(<td key={'codiceMateriale'}>{MATNR}</td>);
+          row.push(<td key={'descrizioneMateriale'}>{MAKTX}</td>);
           //funzione per l'aggiunta di un diametro
-          let diameterString = maktx.split('ø');
+          let diameterString;
+          try{
+            diameterString = MAKTX.split('ø');
+            console.log(diameterString)
+          }
+          catch(e){
+              console.log(e);
+          }
           let diameter; 
           try{
             diameter = diameterString[1].split(' ',1)
@@ -191,8 +201,8 @@ class PaginaFantine extends React.Component{
           if(diameter != null){
             diameters.push(diameter[0]);
           }
-          let scadenza = this.settaggioData(dgltp)
-          let controlloScadenza = this.controlloScadenza(dgltp)
+          let scadenza = this.settaggioData(DGLTP)
+          let controlloScadenza = this.controlloScadenza(DGLTP)
           if(controlloScadenza = "scaduto"){
                 row.push(<td key={'scadenza'} className={"scaduto"}>{scadenza}</td>);
           }
@@ -202,27 +212,34 @@ class PaginaFantine extends React.Component{
           else if(controlloScadenza = "prossimi"){
                 row.push(<td key={'scadenza'} className={"daFare"}>{scadenza}</td>);
           } 
-          row.push(<td key={'totale'}>{psmng}</td>);
-          row.push(<td key={'residuo'}>{resi}</td>);
-          totalePz = totalePz + resi;
-          row.push(<td key={'lanciato'}>{stato}</td>);
-          row.push(<td key={'finito'}>{stlbez}</td>);
-          row.push(<td key={'corsaAsta'}>{atwrt}</td>);
-          row.push(<td key={'corsaCilindro'}>{atwrt1}</td>);
-          row.push(<td key={'grezzo'}>{bismt}</td>);
+          row.push(<td key={'totale'}>{PSMNG}</td>);
+        //   row.push(<td key={'residuo'}>{RESI}</td>);
+        //   totalePz = totalePz + RESI;
+          row.push(<td key={'lanciato'}>{STATO}</td>);
+          row.push(<td key={'finito'}>{STBLEZ}</td>);
+          row.push(<td key={'corsaAsta'}>{ATWRT}</td>);
+          row.push(<td key={'corsaCilindro'}>{ATWRT1}</td>);
+          row.push(<td key={'grezzo'}>{BISMT}</td>);
           
     
           data_rows.push(<tr key={'row_' + data_rows.length}>{row}</tr>)
         })
-        diametersList.sort(function(a,b){return a-b});
+        // console.log("lista caratteristiche");
+        // console.log(listaCaratteristiche);
+        // console.log("lista operazioni");
+        // console.log(listaOperazioni);
+        // console.log("lista produzione")
+        // console.log(listaProduzione)    
+        // diametersList.sort(function(a,b){return a-b});
+        console.log(data_rows);
         this.setState({rows: data_rows, diametersList: diametersList, totalePezziCompleto: totalePz});
         })
         .catch(error => console.log('error', error))
       }
 
-      controlloScadenza(dgltp){
+      controlloScadenza(DGLTP){
         let dataOdierna = new Date();
-        let scadenza = new Date(dgltp);
+        let scadenza = new Date(DGLTP);
         if(scadenza.getDate() > dataOdierna.getDate()){
             return "scaduto"
         }
